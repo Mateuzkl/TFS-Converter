@@ -1,44 +1,853 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Teste — GitHub Pages</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comandos Linux - Guia Completo</title>
   <style>
-    body { font-family: system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial; margin: 2rem; color:#0b1220; background:#f6fbff; }
-    .card { background: #fff; padding: 1.25rem 1.5rem; border-radius: 8px; box-shadow: 0 6px 18px rgba(10,30,60,0.08); max-width:720px; }
-    h1 { margin: 0 0 0.25rem 0; font-size: 1.6rem; color:#07203a; }
-    p { margin: 0.25rem 0 0.75rem 0; color:#234; }
-    .ok { display:inline-block; padding:0.35rem 0.6rem; border-radius:6px; background:#e6fff1; color:#045d2b; font-weight:600; }
-    footer { margin-top:1rem; color:#445; font-size:0.9rem; }
-    code { background:#f1f5ff; padding:0.15rem 0.35rem; border-radius:4px; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #e0e0e0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(26, 26, 46, 0.95);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+    
+    h1 {
+      text-align: center;
+      color: #00e676;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      text-shadow: 0 0 20px rgba(0, 230, 118, 0.5);
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: #b0b0b0;
+      margin-bottom: 30px;
+      font-size: 1.1em;
+    }
+    
+    .search-box {
+      margin-bottom: 25px;
+      text-align: center;
+    }
+    
+    .search-box input {
+      width: 100%;
+      max-width: 500px;
+      padding: 12px 20px;
+      border: 2px solid #667eea;
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      font-size: 16px;
+      outline: none;
+      transition: all 0.3s;
+    }
+    
+    .search-box input:focus {
+      border-color: #00e676;
+      box-shadow: 0 0 15px rgba(0, 230, 118, 0.3);
+    }
+    
+    .category {
+      margin-bottom: 35px;
+    }
+    
+    .category-title {
+      color: #00e676;
+      font-size: 1.8em;
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #667eea;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .category-icon {
+      font-size: 1.2em;
+    }
+    
+    .cmd-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 15px;
+    }
+    
+    .cmd-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 18px;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .cmd-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+      border-color: #667eea;
+    }
+    
+    .cmd-card.danger {
+      border: 2px solid #ff5252;
+      background: rgba(255, 82, 82, 0.05);
+    }
+    
+    .cmd-card.danger::before {
+      content: "⚠️ PERIGO";
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #ff5252;
+      color: #fff;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+    
+    .cmd-name {
+      font-weight: bold;
+      color: #00e676;
+      font-size: 1.15em;
+      margin-bottom: 8px;
+    }
+    
+    .cmd-code {
+      font-family: 'Fira Code', 'Courier New', monospace;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 10px 12px;
+      border-radius: 6px;
+      border-left: 3px solid #667eea;
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      word-break: break-all;
+    }
+    
+    .cmd-card.danger .cmd-code {
+      border-left-color: #ff5252;
+    }
+    
+    .cmd-text {
+      color: #ffeb3b;
+      flex: 1;
+      margin-right: 10px;
+    }
+    
+    .btn-copy {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+    
+    .btn-copy:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5);
+    }
+    
+    .btn-copy:active {
+      transform: scale(0.95);
+    }
+    
+    .btn-copy.copied {
+      background: #00e676;
+    }
+    
+    .cmd-desc {
+      color: #b0b0b0;
+      font-size: 0.95em;
+      margin-top: 8px;
+    }
+    
+    .danger-warning {
+      color: #ff5252;
+      font-weight: bold;
+      margin-top: 8px;
+      padding: 8px;
+      background: rgba(255, 82, 82, 0.1);
+      border-radius: 6px;
+      font-size: 0.9em;
+    }
+    
+    .tip {
+      background: rgba(0, 230, 118, 0.1);
+      border-left: 3px solid #00e676;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 10px;
+      font-size: 0.9em;
+    }
+    
+    .tip strong {
+      color: #00e676;
+    }
+    
+    @media (max-width: 768px) {
+      .cmd-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      h1 {
+        font-size: 1.8em;
+      }
+      
+      .container {
+        padding: 20px;
+      }
+    }
+    
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: #888;
+    }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Teste — GitHub Pages</h1>
-    <p>Se você está vendo esta página, o <strong>index.html</strong> foi publicado corretamente.</p>
+  <div class="container">
+    <h1>🐧 Comandos Linux - Guia Completo</h1>
+    <p class="subtitle">Clique para copiar qualquer comando instantaneamente</p>
+    
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="🔍 Buscar comando..." onkeyup="searchCommands()">
+    </div>
 
-    <p id="status"><span class="ok">Verificando...</span></p>
+    <!-- NAVEGAÇÃO DE ARQUIVOS E DIRETÓRIOS -->
+    <div class="category">
+      <h2 class="category-title"><span class="category-icon">📁</span> Navegação de Arquivos e Diretórios</h2>
+      <div class="cmd-grid">
+        
+        <div class="cmd-card">
+          <div class="cmd-name">Listar arquivos</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-ls">ls -l</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-ls', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Lista todos os arquivos e pastas do diretório atual com detalhes.</div>
+        </div>
 
-    <p>Endereço esperado do site: <code>https://mateuzkl.github.io</code></p>
+        <div class="cmd-card">
+          <div class="cmd-name">Listar incluindo ocultos</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-ls-a">ls -la</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-ls-a', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Mostra todos os arquivos incluindo os ocultos (começam com .).</div>
+        </div>
 
-    <footer>
-      Dica: depois de subir este arquivo, vá em <strong>Settings → Pages</strong> e confirme a branch <code>main</code> e a pasta <code>/ (root)</code>.
-    </footer>
+        <div class="cmd-card">
+          <div class="cmd-name">Ver diretório atual</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-pwd">pwd</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-pwd', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Mostra o caminho completo do diretório onde você está.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Entrar em diretório</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-cd">cd nome_pasta</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-cd', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Entra em uma pasta específica.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Voltar um diretório</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-cd-back">cd ..</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-cd-back', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Retorna para o diretório anterior (pai).</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Ir para home</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-cd-home">cd ~</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-cd-home', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Volta para o diretório home do usuário.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Localizar arquivo</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-find">find . -name "arquivo.txt"</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-find', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Busca arquivo no diretório atual e subdiretórios.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Buscar com locate</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-locate">locate arquivo.txt</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-locate', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Busca rápida no banco de dados do sistema.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MANIPULAÇÃO DE ARQUIVOS -->
+    <div class="category">
+      <h2 class="category-title"><span class="category-icon">📄</span> Manipulação de Arquivos e Pastas</h2>
+      <div class="cmd-grid">
+        
+        <div class="cmd-card">
+          <div class="cmd-name">Criar diretório</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-mkdir">mkdir nome_pasta</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-mkdir', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Cria uma nova pasta no diretório atual.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Criar arquivo vazio</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-touch">touch arquivo.txt</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-touch', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Cria um novo arquivo vazio.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Copiar arquivo</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-cp">cp arquivo.txt destino/</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-cp', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Copia arquivo para outro local.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Copiar pasta recursivamente</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-cp-r">cp -r pasta/ destino/</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-cp-r', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Copia pasta inteira com todo o conteúdo.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Mover ou renomear</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-mv">mv origem destino</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-mv', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Move ou renomeia arquivos/pastas.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Deletar arquivo</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-rm-file">rm arquivo.txt</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-rm-file', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Remove um arquivo específico.</div>
+        </div>
+
+        <div class="cmd-card danger">
+          <div class="cmd-name">Deletar pasta recursivamente</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-rm-rf">rm -rf nome_pasta</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-rm-rf', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Remove pasta e todo seu conteúdo permanentemente.</div>
+          <div class="danger-warning">
+            ⚠️ ATENÇÃO: Este comando deleta PERMANENTEMENTE sem confirmação! Sempre confira o caminho com 'pwd' e 'ls' antes de executar. Nunca use em / (raiz) ou sem especificar o nome correto da pasta!
+          </div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Ver conteúdo de arquivo</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-cat">cat arquivo.txt</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-cat', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Exibe o conteúdo completo do arquivo no terminal.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Ver início do arquivo</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-head">head -n 20 arquivo.txt</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-head', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Mostra as primeiras 20 linhas do arquivo.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Ver final do arquivo</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-tail">tail -n 20 arquivo.txt</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-tail', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Mostra as últimas 20 linhas do arquivo.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Monitorar arquivo em tempo real</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-tail-f">tail -f arquivo.log</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-tail-f', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Acompanha mudanças no arquivo em tempo real (logs).</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Buscar texto em arquivo</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-grep">grep "palavra" arquivo.txt</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-grep', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Busca linhas que contém a palavra especificada.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- COMPILAÇÃO E DESENVOLVIMENTO -->
+    <div class="category">
+      <h2 class="category-title"><span class="category-icon">⚙️</span> Compilação e Desenvolvimento</h2>
+      <div class="cmd-grid">
+        
+        <div class="cmd-card">
+          <div class="cmd-name">Compilar projeto</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-make">make</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-make', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Compila o projeto usando o Makefile.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Compilação paralela</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-make-j">make -j8</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-make-j', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Compila usando 8 núcleos (ajuste conforme seu CPU).</div>
+          <div class="tip"><strong>Dica:</strong> Use <code>nproc</code> para ver quantos núcleos você tem disponíveis.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Limpar compilação</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-make-clean">make clean</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-make-clean', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Remove arquivos temporários da compilação anterior.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Ver núcleos da CPU</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-nproc">nproc</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-nproc', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Mostra quantidade de núcleos do processador.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Configurar CMake</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-cmake">cmake -B build .</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-cmake', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Prepara o build com CMake na pasta build.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Compilar com CMake</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-cmake-build">cmake --build build -j8</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-cmake-build', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Compila projeto CMake com 8 núcleos.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Salvar log de compilação</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-log">make 2>&1 | tee log.txt</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-log', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Salva todos os erros e avisos em log.txt.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Executar programa</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-exec">./nome_programa</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-exec', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Executa o arquivo binário compilado.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SISTEMA E PROCESSOS -->
+    <div class="category">
+      <h2 class="category-title"><span class="category-icon">💻</span> Sistema e Processos</h2>
+      <div class="cmd-grid">
+        
+        <div class="cmd-card">
+          <div class="cmd-name">Ver processos ativos</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-top">top</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-top', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Mostra processos em tempo real com uso de CPU/RAM.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Htop (interativo)</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-htop">htop</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-htop', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Monitor de processos mais visual e interativo.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Listar processos</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-ps">ps aux</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-ps', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Lista todos os processos em execução.</div>
+        </div>
+
+        <div class="cmd-card danger">
+          <div class="cmd-name">Matar processo por ID</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-kill">kill -9 PID</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-kill', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Força o encerramento de um processo.</div>
+          <div class="danger-warning">Substitua PID pelo número do processo. Use ps aux para encontrar o ID.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Ver uso de disco</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-df">df -h</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-df', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Mostra espaço livre/usado nos discos.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Ver tamanho de pasta</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-du">du -sh pasta/</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-du', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Calcula o tamanho total de uma pasta.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Ver memória RAM</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-free">free -h</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-free', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Exibe uso de memória RAM do sistema.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Informações do sistema</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-uname">uname -a</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-uname', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Mostra informações completas do kernel e SO.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Tempo de atividade</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-uptime">uptime</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-uptime', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Mostra há quanto tempo o sistema está ligado.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Histórico de comandos</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-history">history</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-history', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Lista todos os comandos executados anteriormente.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Limpar terminal</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-clear">clear</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-clear', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Limpa a tela do terminal.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- REDE E CONEXÃO -->
+    <div class="category">
+      <h2 class="category-title"><span class="category-icon">🌐</span> Rede e Conectividade</h2>
+      <div class="cmd-grid">
+        
+        <div class="cmd-card">
+          <div class="cmd-name">Testar conexão (ping)</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-ping">ping -c 5 google.com</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-ping', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Envia 5 pacotes para testar conexão.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Ver IP da máquina</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-ip">ip addr show</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-ip', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Mostra todos os IPs das interfaces de rede.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Verificar portas abertas</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-netstat">netstat -tuln</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-netstat', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Lista portas TCP/UDP em escuta.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Baixar arquivo da web</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-wget">wget https://exemplo.com/arquivo.zip</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-wget', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Faz download de arquivo via HTTP/HTTPS.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Curl (requisição HTTP)</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-curl">curl https://api.exemplo.com</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-curl', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Faz requisição HTTP e mostra resposta.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">SSH conectar servidor</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-ssh">ssh usuario@192.168.1.100</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-ssh', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Conecta via SSH em servidor remoto.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Copiar arquivo via SCP</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-scp">scp arquivo.txt user@host:/caminho/</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-scp', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Transfere arquivo para servidor via SSH.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PERMISSÕES E USUÁRIOS -->
+    <div class="category">
+      <h2 class="category-title"><span class="category-icon">🔒</span> Permissões e Usuários</h2>
+      <div class="cmd-grid">
+        
+        <div class="cmd-card">
+          <div class="cmd-name">Mudar permissões (chmod)</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-chmod">chmod 755 arquivo.sh</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-chmod', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Define permissões: dono (rwx), grupo (rx), outros (rx).</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Tornar executável</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-chmod-x">chmod +x script.sh</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-chmod-x', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Adiciona permissão de execução.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Mudar dono do arquivo</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-chown">chown usuario:grupo arquivo.txt</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-chown', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Altera o proprietário e grupo do arquivo.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Executar como root</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-sudo">sudo comando</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-sudo', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Executa comando com privilégios de administrador.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Ver usuário atual</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-whoami">whoami</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-whoami', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Mostra o nome do usuário logado.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Trocar de usuário</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-su">su - nome_usuario</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-su', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Muda para outro usuário no terminal.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- COMPRESSÃO -->
+    <div class="category">
+      <h2 class="category-title"><span class="category-icon">📦</span> Compressão e Arquivos</h2>
+      <div class="cmd-grid">
+        
+        <div class="cmd-card">
+          <div class="cmd-name">Criar arquivo .tar.gz</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-tar-c">tar -czf arquivo.tar.gz pasta/</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-tar-c', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Compacta pasta em formato tar.gz.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Extrair .tar.gz</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-tar-x">tar -xzf arquivo.tar.gz</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-tar-x', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Descompacta arquivo tar.gz.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Criar ZIP</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-zip">zip -r arquivo.zip pasta/</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-zip', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Cria arquivo ZIP com pasta completa.</div>
+        </div>
+
+        <div class="cmd-card">
+          <div class="cmd-name">Extrair ZIP</div>
+          <div class="cmd-code">
+            <span class="cmd-text" id="cmd-unzip">unzip arquivo.zip</span>
+            <button class="btn-copy" onclick="copyCmd('cmd-unzip', this)">Copiar</button>
+          </div>
+          <div class="cmd-desc">Descompacta arquivo ZIP.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>💡 Dica: Use Ctrl+C no terminal para interromper processos em execução</p>
+      <p>Desenvolvido para administradores de servidores Linux • 2025</p>
+    </div>
+
   </div>
 
   <script>
-    // Mensagem de confirmação dinâmica
-    (function(){
-      const status = document.getElementById('status');
-      const host = location.hostname || '';
-      if (host.includes('github.io')) {
-        status.innerHTML = '<span class="ok">Tudo certo — site hospedado em <code>' + host + '</code></span>';
-      } else {
-        status.innerHTML = '<span style="color:#8a3d00;background:#fff4e6;padding:0.35rem 0.6rem;border-radius:6px;font-weight:600">Arquivo carregado localmente ou em outro host: <code>' + host + '</code></span>';
+    async function copyCmd(id, btn) {
+      const element = document.getElementById(id);
+      const text = element.innerText;
+      
+      try {
+        await navigator.clipboard.writeText(text);
+        const originalText = btn.innerText;
+        btn.innerText = "✓ Copiado!";
+        btn.classList.add('copied');
+        
+        setTimeout(() => {
+          btn.innerText = originalText;
+          btn.classList.remove('copied');
+        }, 1500);
+      } catch (err) {
+        alert("Não foi possível copiar. Copie manualmente: " + text);
       }
-    })();
+    }
+
+    function searchCommands() {
+      const input = document.getElementById('searchInput');
+      const filter = input.value.toLowerCase();
+      const cards = document.querySelectorAll('.cmd-card');
+      
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (text.includes(filter)) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
   </script>
 </body>
 </html>
