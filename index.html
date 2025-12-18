@@ -1,853 +1,1191 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Comandos Linux - Guia Completo</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #e0e0e0;
-      padding: 20px;
-      line-height: 1.6;
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      background: rgba(26, 26, 46, 0.95);
-      border-radius: 16px;
-      padding: 30px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    }
-    
-    h1 {
-      text-align: center;
-      color: #00e676;
-      font-size: 2.5em;
-      margin-bottom: 10px;
-      text-shadow: 0 0 20px rgba(0, 230, 118, 0.5);
-    }
-    
-    .subtitle {
-      text-align: center;
-      color: #b0b0b0;
-      margin-bottom: 30px;
-      font-size: 1.1em;
-    }
-    
-    .search-box {
-      margin-bottom: 25px;
-      text-align: center;
-    }
-    
-    .search-box input {
-      width: 100%;
-      max-width: 500px;
-      padding: 12px 20px;
-      border: 2px solid #667eea;
-      border-radius: 50px;
-      background: rgba(255, 255, 255, 0.05);
-      color: #fff;
-      font-size: 16px;
-      outline: none;
-      transition: all 0.3s;
-    }
-    
-    .search-box input:focus {
-      border-color: #00e676;
-      box-shadow: 0 0 15px rgba(0, 230, 118, 0.3);
-    }
-    
-    .category {
-      margin-bottom: 35px;
-    }
-    
-    .category-title {
-      color: #00e676;
-      font-size: 1.8em;
-      margin-bottom: 15px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid #667eea;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .category-icon {
-      font-size: 1.2em;
-    }
-    
-    .cmd-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 15px;
-    }
-    
-    .cmd-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 18px;
-      transition: all 0.3s;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .cmd-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-      border-color: #667eea;
-    }
-    
-    .cmd-card.danger {
-      border: 2px solid #ff5252;
-      background: rgba(255, 82, 82, 0.05);
-    }
-    
-    .cmd-card.danger::before {
-      content: "⚠️ PERIGO";
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: #ff5252;
-      color: #fff;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: bold;
-    }
-    
-    .cmd-name {
-      font-weight: bold;
-      color: #00e676;
-      font-size: 1.15em;
-      margin-bottom: 8px;
-    }
-    
-    .cmd-code {
-      font-family: 'Fira Code', 'Courier New', monospace;
-      background: rgba(0, 0, 0, 0.4);
-      padding: 10px 12px;
-      border-radius: 6px;
-      border-left: 3px solid #667eea;
-      margin: 10px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      word-break: break-all;
-    }
-    
-    .cmd-card.danger .cmd-code {
-      border-left-color: #ff5252;
-    }
-    
-    .cmd-text {
-      color: #ffeb3b;
-      flex: 1;
-      margin-right: 10px;
-    }
-    
-    .btn-copy {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border: none;
-      color: #fff;
-      padding: 6px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 600;
-      transition: all 0.3s;
-      white-space: nowrap;
-    }
-    
-    .btn-copy:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5);
-    }
-    
-    .btn-copy:active {
-      transform: scale(0.95);
-    }
-    
-    .btn-copy.copied {
-      background: #00e676;
-    }
-    
-    .cmd-desc {
-      color: #b0b0b0;
-      font-size: 0.95em;
-      margin-top: 8px;
-    }
-    
-    .danger-warning {
-      color: #ff5252;
-      font-weight: bold;
-      margin-top: 8px;
-      padding: 8px;
-      background: rgba(255, 82, 82, 0.1);
-      border-radius: 6px;
-      font-size: 0.9em;
-    }
-    
-    .tip {
-      background: rgba(0, 230, 118, 0.1);
-      border-left: 3px solid #00e676;
-      padding: 12px;
-      border-radius: 6px;
-      margin-top: 10px;
-      font-size: 0.9em;
-    }
-    
-    .tip strong {
-      color: #00e676;
-    }
-    
-    @media (max-width: 768px) {
-      .cmd-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      h1 {
-        font-size: 1.8em;
-      }
-      
-      .container {
-        padding: 20px;
-      }
-    }
-    
-    .footer {
-      text-align: center;
-      margin-top: 30px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      color: #888;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>🐧 Comandos Linux - Guia Completo</h1>
-    <p class="subtitle">Clique para copiar qualquer comando instantaneamente</p>
-    
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="🔍 Buscar comando..." onkeyup="searchCommands()">
-    </div>
-
-    <!-- NAVEGAÇÃO DE ARQUIVOS E DIRETÓRIOS -->
-    <div class="category">
-      <h2 class="category-title"><span class="category-icon">📁</span> Navegação de Arquivos e Diretórios</h2>
-      <div class="cmd-grid">
-        
-        <div class="cmd-card">
-          <div class="cmd-name">Listar arquivos</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-ls">ls -l</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-ls', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Lista todos os arquivos e pastas do diretório atual com detalhes.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Listar incluindo ocultos</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-ls-a">ls -la</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-ls-a', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Mostra todos os arquivos incluindo os ocultos (começam com .).</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Ver diretório atual</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-pwd">pwd</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-pwd', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Mostra o caminho completo do diretório onde você está.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Entrar em diretório</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-cd">cd nome_pasta</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-cd', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Entra em uma pasta específica.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Voltar um diretório</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-cd-back">cd ..</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-cd-back', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Retorna para o diretório anterior (pai).</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Ir para home</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-cd-home">cd ~</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-cd-home', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Volta para o diretório home do usuário.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Localizar arquivo</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-find">find . -name "arquivo.txt"</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-find', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Busca arquivo no diretório atual e subdiretórios.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Buscar com locate</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-locate">locate arquivo.txt</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-locate', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Busca rápida no banco de dados do sistema.</div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- MANIPULAÇÃO DE ARQUIVOS -->
-    <div class="category">
-      <h2 class="category-title"><span class="category-icon">📄</span> Manipulação de Arquivos e Pastas</h2>
-      <div class="cmd-grid">
-        
-        <div class="cmd-card">
-          <div class="cmd-name">Criar diretório</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-mkdir">mkdir nome_pasta</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-mkdir', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Cria uma nova pasta no diretório atual.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Criar arquivo vazio</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-touch">touch arquivo.txt</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-touch', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Cria um novo arquivo vazio.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Copiar arquivo</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-cp">cp arquivo.txt destino/</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-cp', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Copia arquivo para outro local.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Copiar pasta recursivamente</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-cp-r">cp -r pasta/ destino/</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-cp-r', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Copia pasta inteira com todo o conteúdo.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Mover ou renomear</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-mv">mv origem destino</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-mv', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Move ou renomeia arquivos/pastas.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Deletar arquivo</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-rm-file">rm arquivo.txt</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-rm-file', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Remove um arquivo específico.</div>
-        </div>
-
-        <div class="cmd-card danger">
-          <div class="cmd-name">Deletar pasta recursivamente</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-rm-rf">rm -rf nome_pasta</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-rm-rf', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Remove pasta e todo seu conteúdo permanentemente.</div>
-          <div class="danger-warning">
-            ⚠️ ATENÇÃO: Este comando deleta PERMANENTEMENTE sem confirmação! Sempre confira o caminho com 'pwd' e 'ls' antes de executar. Nunca use em / (raiz) ou sem especificar o nome correto da pasta!
-          </div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Ver conteúdo de arquivo</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-cat">cat arquivo.txt</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-cat', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Exibe o conteúdo completo do arquivo no terminal.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Ver início do arquivo</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-head">head -n 20 arquivo.txt</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-head', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Mostra as primeiras 20 linhas do arquivo.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Ver final do arquivo</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-tail">tail -n 20 arquivo.txt</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-tail', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Mostra as últimas 20 linhas do arquivo.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Monitorar arquivo em tempo real</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-tail-f">tail -f arquivo.log</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-tail-f', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Acompanha mudanças no arquivo em tempo real (logs).</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Buscar texto em arquivo</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-grep">grep "palavra" arquivo.txt</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-grep', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Busca linhas que contém a palavra especificada.</div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- COMPILAÇÃO E DESENVOLVIMENTO -->
-    <div class="category">
-      <h2 class="category-title"><span class="category-icon">⚙️</span> Compilação e Desenvolvimento</h2>
-      <div class="cmd-grid">
-        
-        <div class="cmd-card">
-          <div class="cmd-name">Compilar projeto</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-make">make</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-make', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Compila o projeto usando o Makefile.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Compilação paralela</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-make-j">make -j8</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-make-j', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Compila usando 8 núcleos (ajuste conforme seu CPU).</div>
-          <div class="tip"><strong>Dica:</strong> Use <code>nproc</code> para ver quantos núcleos você tem disponíveis.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Limpar compilação</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-make-clean">make clean</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-make-clean', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Remove arquivos temporários da compilação anterior.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Ver núcleos da CPU</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-nproc">nproc</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-nproc', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Mostra quantidade de núcleos do processador.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Configurar CMake</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-cmake">cmake -B build .</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-cmake', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Prepara o build com CMake na pasta build.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Compilar com CMake</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-cmake-build">cmake --build build -j8</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-cmake-build', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Compila projeto CMake com 8 núcleos.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Salvar log de compilação</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-log">make 2>&1 | tee log.txt</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-log', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Salva todos os erros e avisos em log.txt.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Executar programa</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-exec">./nome_programa</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-exec', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Executa o arquivo binário compilado.</div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- SISTEMA E PROCESSOS -->
-    <div class="category">
-      <h2 class="category-title"><span class="category-icon">💻</span> Sistema e Processos</h2>
-      <div class="cmd-grid">
-        
-        <div class="cmd-card">
-          <div class="cmd-name">Ver processos ativos</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-top">top</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-top', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Mostra processos em tempo real com uso de CPU/RAM.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Htop (interativo)</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-htop">htop</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-htop', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Monitor de processos mais visual e interativo.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Listar processos</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-ps">ps aux</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-ps', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Lista todos os processos em execução.</div>
-        </div>
-
-        <div class="cmd-card danger">
-          <div class="cmd-name">Matar processo por ID</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-kill">kill -9 PID</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-kill', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Força o encerramento de um processo.</div>
-          <div class="danger-warning">Substitua PID pelo número do processo. Use ps aux para encontrar o ID.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Ver uso de disco</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-df">df -h</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-df', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Mostra espaço livre/usado nos discos.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Ver tamanho de pasta</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-du">du -sh pasta/</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-du', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Calcula o tamanho total de uma pasta.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Ver memória RAM</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-free">free -h</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-free', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Exibe uso de memória RAM do sistema.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Informações do sistema</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-uname">uname -a</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-uname', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Mostra informações completas do kernel e SO.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Tempo de atividade</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-uptime">uptime</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-uptime', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Mostra há quanto tempo o sistema está ligado.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Histórico de comandos</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-history">history</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-history', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Lista todos os comandos executados anteriormente.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Limpar terminal</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-clear">clear</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-clear', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Limpa a tela do terminal.</div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- REDE E CONEXÃO -->
-    <div class="category">
-      <h2 class="category-title"><span class="category-icon">🌐</span> Rede e Conectividade</h2>
-      <div class="cmd-grid">
-        
-        <div class="cmd-card">
-          <div class="cmd-name">Testar conexão (ping)</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-ping">ping -c 5 google.com</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-ping', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Envia 5 pacotes para testar conexão.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Ver IP da máquina</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-ip">ip addr show</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-ip', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Mostra todos os IPs das interfaces de rede.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Verificar portas abertas</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-netstat">netstat -tuln</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-netstat', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Lista portas TCP/UDP em escuta.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Baixar arquivo da web</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-wget">wget https://exemplo.com/arquivo.zip</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-wget', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Faz download de arquivo via HTTP/HTTPS.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Curl (requisição HTTP)</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-curl">curl https://api.exemplo.com</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-curl', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Faz requisição HTTP e mostra resposta.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">SSH conectar servidor</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-ssh">ssh usuario@192.168.1.100</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-ssh', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Conecta via SSH em servidor remoto.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Copiar arquivo via SCP</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-scp">scp arquivo.txt user@host:/caminho/</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-scp', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Transfere arquivo para servidor via SSH.</div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- PERMISSÕES E USUÁRIOS -->
-    <div class="category">
-      <h2 class="category-title"><span class="category-icon">🔒</span> Permissões e Usuários</h2>
-      <div class="cmd-grid">
-        
-        <div class="cmd-card">
-          <div class="cmd-name">Mudar permissões (chmod)</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-chmod">chmod 755 arquivo.sh</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-chmod', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Define permissões: dono (rwx), grupo (rx), outros (rx).</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Tornar executável</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-chmod-x">chmod +x script.sh</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-chmod-x', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Adiciona permissão de execução.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Mudar dono do arquivo</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-chown">chown usuario:grupo arquivo.txt</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-chown', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Altera o proprietário e grupo do arquivo.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Executar como root</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-sudo">sudo comando</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-sudo', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Executa comando com privilégios de administrador.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Ver usuário atual</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-whoami">whoami</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-whoami', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Mostra o nome do usuário logado.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Trocar de usuário</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-su">su - nome_usuario</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-su', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Muda para outro usuário no terminal.</div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- COMPRESSÃO -->
-    <div class="category">
-      <h2 class="category-title"><span class="category-icon">📦</span> Compressão e Arquivos</h2>
-      <div class="cmd-grid">
-        
-        <div class="cmd-card">
-          <div class="cmd-name">Criar arquivo .tar.gz</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-tar-c">tar -czf arquivo.tar.gz pasta/</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-tar-c', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Compacta pasta em formato tar.gz.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Extrair .tar.gz</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-tar-x">tar -xzf arquivo.tar.gz</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-tar-x', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Descompacta arquivo tar.gz.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Criar ZIP</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-zip">zip -r arquivo.zip pasta/</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-zip', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Cria arquivo ZIP com pasta completa.</div>
-        </div>
-
-        <div class="cmd-card">
-          <div class="cmd-name">Extrair ZIP</div>
-          <div class="cmd-code">
-            <span class="cmd-text" id="cmd-unzip">unzip arquivo.zip</span>
-            <button class="btn-copy" onclick="copyCmd('cmd-unzip', this)">Copiar</button>
-          </div>
-          <div class="cmd-desc">Descompacta arquivo ZIP.</div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="footer">
-      <p>💡 Dica: Use Ctrl+C no terminal para interromper processos em execução</p>
-      <p>Desenvolvido para administradores de servidores Linux • 2025</p>
-    </div>
-
-  </div>
-
-  <script>
-    async function copyCmd(id, btn) {
-      const element = document.getElementById(id);
-      const text = element.innerText;
-      
-      try {
-        await navigator.clipboard.writeText(text);
-        const originalText = btn.innerText;
-        btn.innerText = "✓ Copiado!";
-        btn.classList.add('copied');
-        
-        setTimeout(() => {
-          btn.innerText = originalText;
-          btn.classList.remove('copied');
-        }, 1500);
-      } catch (err) {
-        alert("Não foi possível copiar. Copie manualmente: " + text);
-      }
-    }
-
-    function searchCommands() {
-      const input = document.getElementById('searchInput');
-      const filter = input.value.toLowerCase();
-      const cards = document.querySelectorAll('.cmd-card');
-      
-      cards.forEach(card => {
-        const text = card.textContent.toLowerCase();
-        if (text.includes(filter)) {
-          card.style.display = '';
-        } else {
-          card.style.display = 'none';
+    <meta charset="UTF-8">
+    <title>TFS Script Converter Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #020617;
+            --bg-surface: rgba(15, 23, 42, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --primary-glow: #6366f1;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
         }
-      });
-    }
-  </script>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at 50% 0%, #1e1b4b, #020617 60%);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Ambient Background Glows */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            left: 20%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(80px);
+            animation: pulse-glow 10s ease-in-out infinite alternate;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            bottom: -10%;
+            right: 10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(60px);
+            animation: pulse-glow 8s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes pulse-glow {
+            0% {
+                opacity: 0.5;
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0.8;
+                transform: scale(1.1);
+            }
+        }
+
+        .app-shell {
+            width: 100%;
+            max-width: 1400px;
+            height: 94vh;
+            background: rgba(15, 23, 42, 0.3);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header {
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .brand-logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .brand-text h1 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        .badge-pro {
+            font-size: 0.65rem;
+            padding: 3px 8px;
+            border-radius: 99px;
+            background: linear-gradient(90deg, #22c55e20, #22c55e10);
+            border: 1px solid #22c55e40;
+            color: #4ade80;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .brand-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .status-chip {
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 99px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #22c55e;
+        }
+
+        .main-content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+            padding: 24px 32px;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding-right: 4px;
+            overflow-y: auto;
+        }
+
+        .control-group {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .group-title {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .type-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .type-pill {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .type-pill:hover {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .type-pill.active {
+            background: linear-gradient(145deg, rgba(99, 102, 241, 0.2), rgba(15, 23, 42, 0.8));
+            border-color: rgba(99, 102, 241, 0.6);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+
+        .type-pill.active::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transform: skewX(-20deg);
+        }
+
+        .pill-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-main);
+            margin-bottom: 2px;
+        }
+
+        .pill-sub {
+            display: block;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            opacity: 0.7;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            margin-bottom: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-glow), var(--accent-purple));
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: skewX(-20deg);
+            transition: 0.5s;
+        }
+
+        .btn-primary:hover::after {
+            left: 150%;
+            transition: 0.7s ease-in-out;
+        }
+
+        .btn-secondary {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+        }
+
+        .progress-container {
+            margin-top: 12px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .progress-track {
+            height: 6px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 99px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--primary-glow));
+            border-radius: 99px;
+            transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
+        }
+
+        .switch-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .switch-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .switch-toggle {
+            width: 36px;
+            height: 20px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 99px;
+            position: relative;
+            transition: 0.3s;
+            border: 1px solid var(--glass-border);
+        }
+
+        .switch-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 14px;
+            height: 14px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        /* Logic fix for existing JS: it toggles 'active' on the parent ID element */
+        #toggleWarnings.active .switch-toggle {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--primary-glow);
+        }
+
+        #toggleWarnings.active .switch-toggle::after {
+            left: 18px;
+            background: var(--primary-glow);
+            box-shadow: 0 0 8px var(--primary-glow);
+        }
+
+        /* Editor Area */
+        .workspace {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .editors-container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            min-height: 0;
+        }
+
+        .editor-panel {
+            background: rgba(2, 6, 23, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .editor-panel:focus-within {
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        .panel-header {
+            padding: 10px 16px;
+            background: rgba(15, 23, 42, 0.4);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .panel-actions button {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .panel-actions button:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        textarea.code-area {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 16px;
+            color: #e2e8f0;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.9rem;
+            resize: none;
+            outline: none;
+            line-height: 1.5;
+        }
+
+        textarea.code-area::placeholder {
+            color: rgba(148, 163, 184, 0.3);
+        }
+
+        /* Bottom Info Area */
+        .info-area {
+            height: 140px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 16px;
+        }
+
+        .log-box {
+            background: rgba(2, 6, 23, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 12px;
+            overflow-y: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+        }
+
+        .log-box h3 {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .log-entry {
+            margin-bottom: 4px;
+            display: flex;
+            gap: 8px;
+            color: var(--text-muted);
+        }
+
+        .log-tag {
+            font-weight: bold;
+            font-size: 0.7rem;
+            padding: 1px 6px;
+            border-radius: 4px;
+        }
+
+        .tag-info {
+            background: #3b82f620;
+            color: #60a5fa;
+        }
+
+        .tag-warn {
+            background: #eab30820;
+            color: #facc15;
+        }
+
+        .tag-ok {
+            background: #22c55e20;
+            color: #4ade80;
+        }
+
+        .stats-box {
+            background: rgba(2, 6, 23, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 12px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .stat-val {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            font-family: var(--font-display);
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                overflow-y: auto;
+            }
+
+            .sidebar {
+                padding-right: 0;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .control-group {
+                flex: 1;
+                min-width: 250px;
+            }
+
+            .type-grid {
+                flex: 1;
+            }
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-card {
+            width: 90vw;
+            height: 85vh;
+            background: #0f172a;
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .modal-header h3 {
+            font-family: var(--font-display);
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 99px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-shell" id="appShell">
+        <header class="header">
+            <div class="brand">
+                <div class="brand-logo">⚡</div>
+                <div class="brand-text">
+                    <h1>TFS Converter <span class="badge-pro">Pro</span></h1>
+                    <p class="brand-desc">Rust Backend · High Performance</p>
+                </div>
+            </div>
+            <div class="status-chip">
+                <span class="status-dot"></span>
+                System Ready
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Sidebar Controls -->
+            <aside class="sidebar">
+                <div class="control-group">
+                    <h2 class="group-title">Configuration</h2>
+                    <div class="type-grid" id="scriptTypeGroup">
+                        <div class="type-pill active" data-type="spell">
+                            <span class="pill-label">✨ Spell</span>
+                            <span class="pill-sub">onCastSpell</span>
+                        </div>
+                        <div class="type-pill" data-type="action">
+                            <span class="pill-label">🧱 Action</span>
+                            <span class="pill-sub">onUse</span>
+                        </div>
+                        <div class="type-pill" data-type="movement">
+                            <span class="pill-label">🚶 Movement</span>
+                            <span class="pill-sub">onStepIn</span>
+                        </div>
+                        <div class="type-pill" data-type="creature">
+                            <span class="pill-label">🐉 Creature</span>
+                            <span class="pill-sub">onThink</span>
+                        </div>
+                        <div class="type-pill" data-type="talkaction">
+                            <span class="pill-label">💬 Talk</span>
+                            <span class="pill-sub">onSay</span>
+                        </div>
+                        <div class="type-pill" data-type="globalevent">
+                            <span class="pill-label">🌍 Global</span>
+                            <span class="pill-sub">onThink</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h2 class="group-title">Actions</h2>
+                    <button class="action-btn btn-primary" id="btnConvert">
+                        🚀 Convert Script
+                    </button>
+                    <button class="action-btn btn-secondary" id="btnCopy">
+                        📋 Copy Result
+                    </button>
+                    <button class="action-btn btn-secondary" id="btnClear">
+                        🗑️ Clear All
+                    </button>
+
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span>Status</span>
+                            <span id="progressLabel">Idle</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" id="progressBar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group" style="cursor: pointer;" id="toggleWarnings">
+                    <div class="switch-row">
+                        <span class="switch-label">Detailed Warnings</span>
+                        <div class="switch-toggle active"></div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Editor Workspace -->
+            <section class="workspace">
+                <div class="editors-container">
+                    <div class="editor-panel">
+                        <div class="panel-header">
+                            <div class="panel-title">📜 Input</div>
+                            <div class="panel-actions">
+                                <button class="btn-maximize" data-target="oldCode">🔍 Expand</button>
+                            </div>
+                        </div>
+                        <textarea id="oldCode" class="code-area" spellcheck="false"
+                            placeholder="Paste TFS 0.x script here..."></textarea>
+                    </div>
+
+                    <div class="editor-panel">
+                        <div class="panel-header">
+                            <div class="panel-title" style="color: var(--primary-glow)">✨ Output (TFS 1.x+)</div>
+                            <div class="panel-actions">
+                                <button class="btn-maximize" data-target="newCode">🔍 Expand</button>
+                            </div>
+                        </div>
+                        <textarea id="newCode" class="code-area" spellcheck="false"
+                            placeholder="Result will appear here..." readonly></textarea>
+                    </div>
+                </div>
+
+                <!-- Bottom Info Area -->
+                <div class="info-area">
+                    <div class="log-box" id="logPanel">
+                        <h3>Process Log</h3>
+                        <div class="log-entry">
+                            <span class="log-tag tag-info">INFO</span>
+                            <span>System ready...</span>
+                        </div>
+                    </div>
+
+                    <div class="stats-box">
+                        <div class="stat-item">
+                            <span class="stat-label">Conversions</span>
+                            <span class="stat-val" id="statConversions">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Lines Processed</span>
+                            <span class="stat-val" id="statLines">0</span>
+                        </div>
+                        <div class="stat-item" style="grid-column: span 2">
+                            <span class="stat-label">Warnings</span>
+                            <span class="stat-val" id="statWarnings">0</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Maximized Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-card">
+            <header class="modal-header">
+                <h3>🔍 Extended View</h3>
+                <div style="display:flex; gap:10px;">
+                    <button class="action-btn btn-secondary" id="btnModalCopy"
+                        style="padding:6px 12px; height:auto; font-size:0.8rem;">
+                        📋 Copy
+                    </button>
+                    <button class="action-btn btn-secondary" id="btnCloseModal"
+                        style="width:32px; padding:0;">×</button>
+                </div>
+            </header>
+            <div style="flex:1; padding:16px; display: flex; flex-direction: column;">
+                <textarea id="modalEditor" class="code-area"
+                    style="height:100%; width: 100%; border-radius:8px; background:rgba(0,0,0,0.3);"
+                    spellcheck="false"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const oldCodeEl = document.getElementById('oldCode');
+        const newCodeEl = document.getElementById('newCode');
+        const progressBar = document.getElementById('progressBar');
+        const progressLabel = document.getElementById('progressLabel');
+        const logPanel = document.getElementById('logPanel');
+        const statConversions = document.getElementById('statConversions');
+        const statLines = document.getElementById('statLines');
+        const statWarnings = document.getElementById('statWarnings');
+        const scriptTypeGroup = document.getElementById('scriptTypeGroup');
+        const toggleWarnings = document.getElementById('toggleWarnings');
+
+        scriptTypeGroup.addEventListener('click', (e) => {
+            const btn = e.target.closest('.type-pill');
+            if (!btn) return;
+
+            document.querySelectorAll('.type-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            addLog('INFO', `Tipo de script selecionado.`);
+        });
+
+        toggleWarnings.addEventListener('click', () => {
+            toggleWarnings.classList.toggle('active');
+            addLog('INFO', `Avisos detalhados: ${toggleWarnings.classList.contains('active') ? 'ON' : 'OFF'}`);
+        });
+
+        document.getElementById('btnClear').addEventListener('click', () => {
+            oldCodeEl.value = '';
+            newCodeEl.value = '';
+            statConversions.textContent = '0';
+            statWarnings.textContent = '0';
+            statLines.textContent = '0';
+            logPanel.innerHTML = '<h3>Process Log</h3>' +
+                '<div class="log-entry"><span class="log-tag tag-info">INFO</span> <span>System ready...</span></div>';
+            setProgress(0, 'Idle');
+        });
+
+        document.getElementById('btnCopy').addEventListener('click', () => {
+            if (!newCodeEl.value.trim()) return;
+            newCodeEl.select();
+            document.execCommand('copy');
+            addLog('OK', 'Código convertido copiado para a área de transferência.');
+        });
+
+        document.getElementById('btnConvert').addEventListener('click', async () => {
+            await runConversion();
+        });
+
+        document.addEventListener('keydown', async (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                e.preventDefault();
+                await runConversion();
+            }
+        });
+
+        function setProgress(pct, label) {
+            progressBar.style.width = pct + '%';
+            progressLabel.textContent = label;
+        }
+
+        function addLog(type, msg) {
+            const div = document.createElement('div');
+            div.className = 'log-entry';
+            const span = document.createElement('span');
+            span.className = 'log-tag';
+
+            if (type === 'WARN') span.classList.add('tag-warn');
+            else if (type === 'OK') span.classList.add('tag-ok');
+            else span.classList.add('tag-info');
+
+            span.textContent = type;
+            div.appendChild(span);
+
+            const msgSpan = document.createElement('span');
+            msgSpan.textContent = msg;
+            div.appendChild(msgSpan);
+
+            logPanel.appendChild(div);
+            logPanel.scrollTop = logPanel.scrollHeight;
+        }
+
+        let conversionCount = 0;
+        let warnings = [];
+
+        function analyzeContext(code) {
+            return {
+                isOnAttack: /function\s+onAttack/.test(code),
+                isOnCastSpell: /function\s+onCastSpell/.test(code),
+                isOnUse: /function\s+onUse/.test(code)
+            };
+        }
+
+        function convertMainFunction(code, contexts) {
+            // function onCastSpell(cid, var)
+            code = code.replace(/function\s+onCastSpell\s*\(\s*cid\s*,\s*var\s*\)/g, () => {
+                conversionCount++;
+                return 'function onCastSpell(creature, variant)';
+            });
+
+            // function onAttack(cid, target) → onAttack(creature, target)
+            code = code.replace(/function\s+onAttack\s*\(\s*cid\s*,\s*target\s*\)/g, () => {
+                conversionCount++;
+                return 'function onAttack(creature, target)';
+            });
+
+            // function onStepIn(cid, item, pos, fromPosition)
+            code = code.replace(/function\s+onStepIn\s*\(\s*cid\s*,\s*item\s*,\s*pos\s*,\s*fromPos(?:ition)?\s*\)/g, () => {
+                conversionCount++;
+                return 'function onStepIn(creature, item, position, fromPosition)';
+            });
+
+            // function onUse(cid, item, ...)
+            code = code.replace(/function\s+onUse\s*\(\s*cid\s*,/g, () => {
+                conversionCount++;
+                return 'function onUse(player,';
+            });
+
+            // var -> variant (mas não dentro de for/while/local var)
+            code = code.replace(/\bvar\b(?!\s*[=:]|\s+\w)/g, () => {
+                conversionCount++;
+                return 'variant';
+            });
+
+            // --- HUGE BATCH OF REGEX PORTS ---
+
+            // Position
+            code = code.replace(/getThingPos\s*\(\s*cid\s*\)/g, 'creature:getPosition()');
+            code = code.replace(/getCreaturePosition\s*\(\s*cid\s*\)/g, 'creature:getPosition()');
+            code = code.replace(/getPlayerPosition\s*\(\s*cid\s*\)/g, 'player:getPosition()');
+            code = code.replace(/getThingPos\s*\(\s*(\w+)\s*\)/g, '$1:getPosition()');
+
+            // Storage
+            code = code.replace(/getPlayerStorageValue\s*\(\s*cid\s*,\s*([^)]+)\)/g, 'player:getStorageValue($1)');
+            code = code.replace(/setPlayerStorageValue\s*\(\s*cid\s*,\s*([^,]+),\s*([^)]+)\)/g, 'player:setStorageValue($1, $2)');
+            code = code.replace(/getGlobalStorageValue\s*\(\s*([^)]+)\)/g, 'Game.getStorageValue($1)');
+            code = code.replace(/setGlobalStorageValue\s*\(\s*([^,]+),\s*([^)]+)\)/g, 'Game.setStorageValue($1, $2)');
+
+            // Player Actions
+            code = code.replace(/doPlayerSendCancel\s*\(\s*cid\s*,\s*([^)]+)\)/g, 'player:sendCancelMessage($1)');
+            code = code.replace(/doPlayerSendTextMessage\s*\(\s*cid\s*,\s*([^,]+),\s*([^)]+)\)/g, 'player:sendTextMessage($1, $2)');
+            code = code.replace(/doTeleportThing\s*\(\s*cid\s*,\s*([^)]+)\)/g, 'creature:teleportTo($1)');
+            code = code.replace(/doSendMagicEffect\s*\(\s*([^,]+),\s*([^)]+)\)/g, (m, pos, eff) => {
+                // If pos is getThingPos(cid), we might have already converted it to creature:getPosition()
+                // Just use generic replacement assuming pos is a Position object or [x,y,z]
+                return `Position(${pos}):sendMagicEffect(${eff})`;
+            });
+            // Fix double Position cast if already object
+            code = code.replace(/Position\(creature:getPosition\(\)\)/g, 'creature:getPosition()');
+            code = code.replace(/Position\(player:getPosition\(\)\)/g, 'player:getPosition()');
+
+            // Guilds
+            code = code.replace(/getPlayerGuildId\s*\(\s*cid\s*\)/g, '(player:getGuild() and player:getGuild():getId() or 0)');
+            code = code.replace(/getPlayerGuildName\s*\(\s*cid\s*\)/g, '(player:getGuild() and player:getGuild():getName() or "None")');
+            // Optimistic simple replacements if above is too messy
+            // code = code.replace(/getPlayerGuildId\s*\(\s*cid\s*\)/g, 'player:getGuild():getId()');
+
+            // Creature Info
+            code = code.replace(/getCreatureName\s*\(\s*cid\s*\)/g, 'creature:getName()');
+            code = code.replace(/getPlayerLevel\s*\(\s*cid\s*\)/g, 'player:getLevel()');
+            code = code.replace(/isPlayer\s*\(\s*cid\s*\)/g, 'Player(cid)'); // simplistic check
+
+            // Game
+            code = code.replace(/doBroadcastMessage\s*\(/g, 'Game.broadcastMessage(');
+
+            // Legacy / Removed
+            code = code.replace(/doSendAnimatedText\s*\(\s*([^,]+),\s*([^,]+),\s*([^)]+)\)/g, (m, pos, text, color) => {
+                warnings.push('doSendAnimatedText removido no TFS 1.x. Substituído por Game.sendAnimatedText (se custom) ou comentário.');
+                return `-- Game.sendAnimatedText(${pos}, ${text}, ${color}) -- OBS: Função removida no oficial`;
+            });
+
+            // Database
+            // db.query -> usually db.storeQuery or db.asyncQuery. 
+            // If it's INSERT/UPDATE, use db.query is often still aliased or db.execute?
+            // Leaving as is but warning.
+            if (code.includes('db.query')) {
+                warnings.push('db.query detectado. Verifique se seu servidor suporta ou use db.storeQuery/db.asyncQuery.');
+            }
+
+            return code;
+        }
+
+        function addNecessaryValidations(code, contexts) {
+            // CORREÇÃO CRÍTICA: Player validation para onAttack
+            if (contexts.isOnAttack) {
+                // Remover Player(cid) se existir
+                if (code.includes('Player(cid)')) {
+                    code = code.replace(/local\s+player\s*=\s*Player\s*\(\s*cid\s*\)/g, '');
+                    conversionCount++;
+                }
+
+                // Verificar se usa player: mas não tem declaração correta
+                if (code.includes('player:') && !code.match(/local\s+player\s*=\s*creature/)) {
+                    const funcMatch = code.match(/(function\s+onAttack\s*\([^)]+\)\s*\n)/);
+                    if (funcMatch) {
+                        const validation = '\t-- Validação básica\n' +
+                            '\tif not creature or not target then\n' +
+                            '\t\treturn false\n' +
+                            '\tend\n' +
+                            '\t\n' +
+                            '\t-- Em onAttack, creature pode ser player OU summon\n' +
+                            '\tlocal player = creature:isPlayer() and creature or creature:getMaster()\n' +
+                            '\tif not player then\n' +
+                            '\t\treturn true\n' +
+                            '\tend\n\n';
+
+                        code = code.replace(funcMatch[0], funcMatch[0] + validation);
+                        conversionCount++;
+                        warnings.push('Player validation adicionada para onAttack (suporta player e summons)');
+                    }
+                }
+            }
+
+            // Player validation para onCastSpell
+            if (contexts.isOnCastSpell) {
+                if (code.includes('player:') && !code.match(/local\s+player\s*=/)) {
+                    const funcMatch = code.match(/(function\s+onCastSpell\s*\([^)]+\)\s*\n)/);
+                    if (funcMatch) {
+                        code = code.replace(funcMatch[0],
+                            funcMatch[0] + '\tlocal player = creature:getPlayer()\n\tif not player then\n\t\treturn false\n\tend\n\n');
+                        conversionCount++;
+                        warnings.push('Player validation adicionada para onCastSpell');
+                    }
+                }
+            }
+
+            return code;
+        }
+
+        function addLocalVariables(code) {
+            // Detectar variáveis sem 'local' que deveriam ter
+            const variables = ['storageStatus', 'playerPos', 'targetPos', 'pos', 'position', 'combat', 'condition'];
+
+            for (const varName of variables) {
+                // Buscar primeira atribuição sem 'local' na linha
+                const lines = code.split('\n');
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
+                    // Regex: linha que começa com espaços + varName + = (sem 'local' antes)
+                    const regex = new RegExp(`^(\\s*)${varName}\\s*=`);
+                    if (regex.test(line) && !line.trim().startsWith('local')) {
+                        // Verificar se já não tem local ${varName} em algum lugar anterior
+                        const checkLocal = new RegExp(`local\\s+${varName}\\s*=`);
+                        if (!code.match(checkLocal)) {
+                            lines[i] = line.replace(regex, '$1local ' + varName + ' =');
+                            conversionCount++;
+                        }
+                    }
+                }
+                code = lines.join('\n');
+            }
+
+            return code;
+        }
+
+        async function runConversion() {
+            const src = oldCodeEl.value;
+            if (!src.trim()) {
+                addLog('WARN', 'Nenhum código para converter.');
+                return;
+            }
+
+            setProgress(10, 'Iniciando Conversão...');
+
+            // Reset state
+            conversionCount = 0;
+            warnings = [];
+
+            // 1. Analyze Context
+            const contexts = analyzeContext(src);
+
+            // 2. Main Conversions
+            let newCode = convertMainFunction(src, contexts);
+
+            // 3. Validations
+            newCode = addNecessaryValidations(newCode, contexts);
+
+            // 4. Locals
+            newCode = addLocalVariables(newCode);
+
+            // 5. Basic Replacements (Legacy to 1.x) - Minimal set to support the user's snippet
+            newCode = newCode.replace(/getPlayerStorageValue\s*\(\s*cid\s*,\s*([^)]+)\)/g, 'player:getStorageValue($1)');
+            newCode = newCode.replace(/getCreaturePosition\s*\(\s*cid\s*\)/g, 'creature:getPosition()');
+            newCode = newCode.replace(/getCreaturePosition\s*\(\s*target\s*\)/g, 'target:getPosition()');
+            newCode = newCode.replace(/getDistanceBetween\s*\(\s*(\w+)\s*,\s*(\w+)\s*\)/g, '$1:getDistance($2)');
+            newCode = newCode.replace(/doCombatAreaCondition\s*\(\s*cid\s*,\s*(\w+)\s*,\s*nil\s*,\s*(\w+)\s*,\s*([^)]+)\)/g, (m, pos, cond, eff) => {
+                warnings.push('doCombatAreaCondition deprecated -> logic updated');
+                return `target:addCondition(${cond})\n\t${pos}:sendMagicEffect(${eff})`;
+            });
+            // Fix 0 checks
+            newCode = newCode.replace(/==\s*0/g, '< 1'); // safe bet for storage
+
+            // Final Output
+            newCodeEl.value = newCode;
+
+            statConversions.textContent = String(conversionCount);
+            statLines.textContent = String(newCode.split('\n').length);
+
+            if (warnings.length > 0) {
+                statWarnings.textContent = String(warnings.length);
+                if (toggleWarnings.classList.contains('active')) {
+                    warnings.forEach(w => addLog('WARN', w));
+                } else {
+                    addLog('WARN', `${warnings.length} avisos gerados.`);
+                }
+            } else {
+                statWarnings.textContent = "0";
+            }
+
+            setProgress(100, 'Concluído (JS)');
+            addLog('OK', 'Conversão JS aplicada.');
+        }
+
+        // --- Logic for Modal/Maximize ---
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalEditor = document.getElementById('modalEditor');
+        const btnCloseModal = document.getElementById('btnCloseModal');
+        let currentEditingTarget = null; // 'oldCode' or 'newCode'
+
+        // Open Modal
+        document.querySelectorAll('.btn-maximize').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.getAttribute('data-target');
+                currentEditingTarget = targetId;
+
+                const sourceEl = document.getElementById(targetId);
+                modalEditor.value = sourceEl.value;
+
+                modalOverlay.classList.add('active');
+                modalEditor.focus();
+            });
+        });
+
+        // Close Modal & Sync
+        function closeModal() {
+            if (currentEditingTarget) {
+                const sourceEl = document.getElementById(currentEditingTarget);
+                sourceEl.value = modalEditor.value; // Sync back changes
+            }
+            modalOverlay.classList.remove('active');
+            currentEditingTarget = null;
+        }
+
+        btnCloseModal.addEventListener('click', closeModal);
+
+        document.getElementById('btnModalCopy').addEventListener('click', () => {
+            if (!modalEditor.value.trim()) return;
+            modalEditor.select();
+            document.execCommand('copy');
+            // Brief visual feedback
+            const originalText = document.getElementById('btnModalCopy').innerText;
+            document.getElementById('btnModalCopy').innerText = 'Copiado!';
+            setTimeout(() => {
+                document.getElementById('btnModalCopy').innerText = originalText;
+            }, 1000);
+        });
+
+
+        // Close on click outside
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
+
+        // Close on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+                closeModal();
+            }
+        });
+    </script>
 </body>
+
 </html>
